@@ -4,6 +4,7 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(32))
     email = db.Column(db.String(64))
