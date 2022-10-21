@@ -1,4 +1,6 @@
 from flask import Flask
+
+from converter.views.views import ViewTask
 from .models import db
 from flask_restful import Api
 from .views import ViewSignUp, ViewLogIn
@@ -26,5 +28,6 @@ db.create_all()
 api = Api(app)
 api.add_resource(ViewSignUp, '/api/auth/signup')
 api.add_resource(ViewLogIn, '/api/auth/login')
+api.add_resource(ViewTask, '/api/tasks')
 
 jwt = JWTManager(app)
