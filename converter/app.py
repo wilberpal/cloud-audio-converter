@@ -1,9 +1,9 @@
 from flask import Flask
 
-from converter.views.views import ViewTask
+
 from .models import db
 from flask_restful import Api
-from .views import ViewSignUp, ViewLogIn
+from .views import ViewConverter
 from flask_jwt_extended import JWTManager
 
 def create_app(config_name):
@@ -23,11 +23,9 @@ app_context = app.app_context()
 app_context.push()
 
 db.init_app(app)
-db.create_all()
+##db.create_all()
 
 api = Api(app)
-api.add_resource(ViewSignUp, '/api/auth/signup')
-api.add_resource(ViewLogIn, '/api/auth/login')
-api.add_resource(ViewTask, '/api/tasks')
+api.add_resource(ViewConverter, '/api/audio/conventer')
 
 jwt = JWTManager(app)
