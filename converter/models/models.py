@@ -14,10 +14,8 @@ FILE_ID_DB_NAME='file.id'
 CASCADE_FULL_DB = 'all, delete, delete-orphan'
 class AudioFormat(enum.Enum):
     MP3 = "MP3"
-    ACC = "ACC"
     OGG="OGG"
     WAV="WAV"
-    WMA="WMA"
 
 class ProcessStatus(enum.Enum):
     PROCESSED = "PROCESSED"
