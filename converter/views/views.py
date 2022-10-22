@@ -27,7 +27,8 @@ class ViewConverter(Resource):
     
     def post(self):
         try:
-            
+            if not allowedFile('q.'+request.json["output_extention"]):
+                return {"mensaje": "El formato de salida no es valido (mp3, ogg, wav)","error":True}              
 
             user = User.query.get_or_404(request.json["user_id"])
             task = Task.query.get_or_404(request.json["task_id"])
