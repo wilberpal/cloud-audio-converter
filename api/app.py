@@ -1,6 +1,6 @@
 from flask import Flask
 
-from api.views.views import ViewTasks,ViewTask
+from api.views.views import ViewTasks,ViewTask,ViewFile
 from .models import db
 from flask_restful import Api
 from .views import ViewSignUp, ViewLogIn
@@ -30,5 +30,6 @@ api.add_resource(ViewSignUp, '/api/auth/signup')
 api.add_resource(ViewLogIn, '/api/auth/login')
 api.add_resource(ViewTasks, '/api/tasks')
 api.add_resource(ViewTask, '/api/tasks/<int:id>')
+api.add_resource(ViewFile, '/api/files/<name>')
 
 jwt = JWTManager(app)
