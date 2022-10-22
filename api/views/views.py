@@ -2,13 +2,14 @@ import datetime
 import os
 import re
 from nis import match
-import requests
-from requests.exceptions import ConnectionError
+
 import jwt
+import requests
 from celery import Celery
 from flask import redirect, request, send_file, url_for
 from flask_jwt_extended import create_access_token, jwt_required
 from flask_restful import Resource
+from requests.exceptions import ConnectionError
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 
@@ -91,6 +92,29 @@ class ViewTask(Resource):
         except:
             return error()
 
+    @jwt_required()
+    def delete(self, id):
+        try:
+            task = Task.query.get_or_404(id)
+            
+
+            if (task.status.value != 'PROCESSED'):
+                return {"mensaje": "La tarea no se puede eliminar ya que aún no se ha procesado", "error": True}
+
+            output_file = File.query.get_or_404(task.output_file_id)
+            input_file = File.query.get_or_404(task.input_file_id)
+            os.remove(os.path.join("files", input_file.path.split("/")[1]))
+            os.remove(os.path.join("files", output_file.path.split("/")[1]))      
+            db.session.delete(task)
+            db.session.commit()
+            db.session.delete(output_file)
+            db.session.delete(input_file)
+            db.session.commit()
+            return {'mensaje': 'Tarea eliminada con exito'}, 200
+        except NameError:
+            error=NameError
+            return error()
+
 
 class ViewTasks(Resource):
     @jwt_required()
@@ -163,11 +187,11 @@ class ViewFile(Resource):
     @jwt_required()
     def get(self, name):
         try:
-            user=File.query.filter(File.name==name).first()
+            user = File.query.filter(File.name == name).first()
             path = "../"+user.path
             return send_file(path, as_attachment=True)
-        except :
-      
+        except:
+
             return error()
 
 
@@ -177,7 +201,7 @@ def convert_file(task_id, input_file_id, output_extention, user_id, retry):
 
 
 def error():
-    return {"mensaje": "Hubo un error no esperado", "error": True}
+    return {"mensaje": "Hubo un error no esperado", "error": True}, 500
 
 
 def getExtention(format):
