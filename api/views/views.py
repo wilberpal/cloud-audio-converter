@@ -68,57 +68,78 @@ class ViewSignUp(Resource):
 
 class ViewTask(Resource):
      @jwt_required()
-     def get(self):
-        token_data = getTokenData(request)
-        paginate=getPagination(request)
-        order=Task.id if(request.args.get('order')!='1') else Task.id.desc()
-        tasks=Task.query.filter(Task.user_id==token_data['sub']).order_by(order).paginate(page=paginate['page'] , per_page=paginate['per_page'])
-        
-        for task in tasks:
+     def get(self,id):
+        try:
+            task=Task.query.get_or_404(id)
             task.status=task.status.value
             task.output_extention=task.output_extention.value
-            task.user=task.usuario.username
+            #task.user=task.usuario.username
             task.input_extention=task.input_extention.value
-        return [task_schema.dump(task) for task in tasks]
-    
+            t=task_schema.dump(Task.query.get_or_404(id))
+            t["usuario"]=task.usuario.username
+            return  t
+        except:
+            return error()
+
+class ViewTasks(Resource):
+     @jwt_required()
+     def get(self):
+        try:
+            token_data = getTokenData(request)
+            paginate=getPagination(request)
+            order=Task.id if(request.args.get('order')!='1') else Task.id.desc()
+            tasks=Task.query.filter(Task.user_id==token_data['sub']).order_by(order).paginate(page=paginate['page'] , per_page=paginate['per_page'])
+            
+            for task in tasks:
+                task.status=task.status.value
+                task.output_extention=task.output_extention.value
+                task.user=task.usuario.username
+                task.input_extention=task.input_extention.value
+            return [task_schema.dump(task) for task in tasks]
+        except:
+            return error()
+            
      @jwt_required()
      def post(self):
-        file = request.files['file']
-        response= {"mensaje": "Tarea creada con exito","error":False}
-        if 'file' not in request.files or file.filename == '':
-            response["error"]=True
-            response["mensaje"]="Debe ingresar un archivo"
-        elif 'newFormat' not in request.form :
-            response["error"]=True
-            response["mensaje"]="Debe especificar un formato de salida 'newFormat'"
-        elif not allowedFile('q.'+request.form['newFormat']):
-            response["error"]=True
-            response["mensaje"]="El formato de salida no es valido (mp3, ogg, wav)"
-        elif not allowedFile(file.filename):          
-            response["error"]=True
-            response["mensaje"]="El formato del archivo debe ser (mp3, ogg, wav)"
-        else:
-            token_data = getTokenData(request) 
-            file_name=file.filename 
-            extention=file_name.rsplit('.', 1)[1].lower()
-            path='files/'+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f")+'.'+extention     
-            output_extention=getExtention(request.form['newFormat'])
-            user_id=token_data['sub']       
+        try:
+            file = request.files['file']
+            response= {"mensaje": "Tarea creada con exito","error":False}
+            if 'file' not in request.files or file.filename == '':
+                response["error"]=True
+                response["mensaje"]="Debe ingresar un archivo"
+            elif 'newFormat' not in request.form :
+                response["error"]=True
+                response["mensaje"]="Debe especificar un formato de salida 'newFormat'"
+            elif not allowedFile('q.'+request.form['newFormat']):
+                response["error"]=True
+                response["mensaje"]="El formato de salida no es valido (mp3, ogg, wav)"
+            elif not allowedFile(file.filename):          
+                response["error"]=True
+                response["mensaje"]="El formato del archivo debe ser (mp3, ogg, wav)"
+            else:
+                token_data = getTokenData(request) 
+                file_name=file.filename 
+                extention=file_name.rsplit('.', 1)[1].lower()
+                path='files/'+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f")+'.'+extention     
+                output_extention=getExtention(request.form['newFormat'])
+                user_id=token_data['sub']       
 
-            new_file=File(name=file_name,extention=getExtention(extention),path=path,timestamp = datetime.datetime.now(),user_id=user_id)
-            db.session.add(new_file)    
-            db.session.commit()  
-            
-            new_task=Task(status=ProcessStatus.UPLOADED,input_extention=getExtention(extention),output_extention=output_extention,user_id=user_id,input_file_id=new_file.id)
-            db.session.add(new_task)    
-            db.session.commit()  
+                new_file=File(name=file_name,extention=getExtention(extention),path=path,timestamp = datetime.datetime.now(),user_id=user_id)
+                db.session.add(new_file)    
+                db.session.commit()  
+                
+                new_task=Task(status=ProcessStatus.UPLOADED,input_extention=getExtention(extention),output_extention=output_extention,user_id=user_id,input_file_id=new_file.id)
+                db.session.add(new_task)    
+                db.session.commit()  
 
-            file.save(path)
-            retry = 0
-            args=(new_task.id,new_file.id, request.form['newFormat'], user_id,retry)
-            convert_file.apply_async(args)
+                file.save(path)
+                retry = 0
+                args=(new_task.id,new_file.id, request.form['newFormat'], user_id,retry)
+                convert_file.apply_async(args)
 
-        return response
+            return response
+        except:
+            return error()
 
 
 
@@ -128,7 +149,8 @@ def convert_file(task_id,input_file_id, output_extention, user_id,retry):
 
 
 
-
+def error():
+    return {"mensaje": "Hubo un error no esperado","error":True}
 def getExtention(format):
     if format =='mp3':
         return AudioFormat.MP3
