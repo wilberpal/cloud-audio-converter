@@ -93,10 +93,39 @@ class ViewTask(Resource):
             return error()
 
     @jwt_required()
+    def put(self, id):
+        try:                         
+         
+            if not allowedFile('q.'+request.json['newFormat']):
+                return {"mensaje": "El formato de salida no es valido (mp3, ogg, wav)", "error": True}
+
+            task = Task.query.get_or_404(id)  
+            task.output_extention = getExtention(request.json['newFormat'])
+            task.status=ProcessStatus.UPLOADED
+
+            if(task.output_file_id != None):                
+                output_file = File.query.get_or_404(task.output_file_id)
+                task.output_file_id= None
+                os.remove(os.path.join("files", output_file.path.split("/")[1])) 
+                db.session.delete(output_file)
+                db.session.commit()
+
+            db.session.commit()            
+            task.status = task.status.value
+            task.output_extention = task.output_extention.value
+            # task.user=task.usuario.username
+            task.input_extention = task.input_extention.value
+            t = task_schema.dump(Task.query.get_or_404(id))
+            t["usuario"] = task.usuario.username   
+            return t
+        except NameError:
+            error=NameError
+            return error()
+
+    @jwt_required()
     def delete(self, id):
         try:
-            task = Task.query.get_or_404(id)
-            
+            task = Task.query.get_or_404(id)            
 
             if (task.status.value != 'PROCESSED'):
                 return {"mensaje": "La tarea no se puede eliminar ya que aún no se ha procesado", "error": True}
