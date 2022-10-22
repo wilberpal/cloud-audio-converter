@@ -68,6 +68,21 @@ class ViewSignUp(Resource):
 
 class ViewTask(Resource):
      @jwt_required()
+     def get(self,id):
+        try:
+            task=Task.query.get_or_404(id)
+            task.status=task.status.value
+            task.output_extention=task.output_extention.value
+            #task.user=task.usuario.username
+            task.input_extention=task.input_extention.value
+            t=task_schema.dump(Task.query.get_or_404(id))
+            t["usuario"]=task.usuario.username
+            return  t
+        except:
+            return error()
+
+class ViewTasks(Resource):
+     @jwt_required()
      def get(self):
         try:
             token_data = getTokenData(request)
