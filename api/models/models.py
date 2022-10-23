@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-
+from marshmallow_enum import EnumField
 import enum
 db = SQLAlchemy()
 
@@ -65,12 +65,15 @@ class UserSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 class TaskSchema(SQLAlchemyAutoSchema):
+
     class Meta:
         model = Task
         include_relationships = True
         load_instance = True
 
 class FileSchema(SQLAlchemyAutoSchema):
+    input_extention=EnumField(AudioFormat, by_value=True)
+    output_extention=EnumField(AudioFormat, by_value=True)
     class Meta:
         model = File
         include_relationships = True

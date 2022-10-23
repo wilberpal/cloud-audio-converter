@@ -109,7 +109,10 @@ class ViewTask(Resource):
                 db.session.delete(output_file)
                 db.session.commit()
 
-            db.session.commit()            
+            db.session.commit() 
+            args = (task.id, task.input_file_id,
+                        request.json['newFormat'], task.user_id, 0) 
+            convert_file.apply_async(args)          
             task.status = task.status.value
             task.output_extention = task.output_extention.value
             # task.user=task.usuario.username
@@ -155,12 +158,13 @@ class ViewTasks(Resource):
             tasks = Task.query.filter(Task.user_id == token_data['sub']).order_by(
                 order).paginate(page=paginate['page'], per_page=paginate['per_page'])
 
-            for task in tasks:
+           
+            for task in tasks.items:
                 task.status = task.status.value
                 task.output_extention = task.output_extention.value
                 task.user = task.usuario.username
                 task.input_extention = task.input_extention.value
-            return [task_schema.dump(task) for task in tasks]
+            return [task_schema.dump(task) for task in tasks.items]
         except:
             return error()
 

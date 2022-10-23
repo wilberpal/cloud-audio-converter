@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager
 def create_app(config_name):
         app = Flask(__name__)
         ##postgresql://<nombre_usuario>:<password>@<host>:<puerto>/<nombre_basededatos>
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgrespw@localhost:49153/postgres'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgrespw@localhost:5432/postgres'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         app.config['JWT_SECRET_KEY']='frase-secreta'
@@ -26,6 +26,6 @@ db.init_app(app)
 ##db.create_all()
 
 api = Api(app)
-api.add_resource(ViewConverter, '/api/audio/conventer')
+api.add_resource(ViewConverter, '/api/audio/converter')
 
 jwt = JWTManager(app)
