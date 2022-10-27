@@ -1,6 +1,6 @@
 from flask import Flask
 
-from api.views.views import ViewTasks,ViewTask,ViewFile
+from .views import ViewTasks,ViewTask,ViewFile
 from .models import db
 from flask_restful import Api
 from .views import ViewSignUp, ViewLogIn
