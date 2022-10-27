@@ -1,7 +1,7 @@
 from flask import Flask
 
 
-from api.models import db
+from models import db
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
