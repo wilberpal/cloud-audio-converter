@@ -1,10 +1,11 @@
 from flask import Flask
 
-from .views import ViewTasks,ViewTask,ViewFile
-from .models import db
+
+from api.models import db
 from flask_restful import Api
-from .views import ViewSignUp, ViewLogIn
 from flask_jwt_extended import JWTManager
+
+from api.views.views import ViewFile, ViewLogIn, ViewSignUp, ViewTask, ViewTasks
 
 def create_app(config_name):
         app = Flask(__name__)
