@@ -4,6 +4,7 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     JWT_SECRET_KEY='frase-secreta'
     PROPAGATE_EXCEPTIONS=True
+    PATH_FILES='/files/'
 
 class GCPConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI= 'postgresql://postgres:0123456789@35.238.2.63:5432/postgres'

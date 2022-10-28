@@ -11,6 +11,7 @@ from flask_restful import Resource
 from requests.exceptions import ConnectionError
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
+from flask import current_app
 
 from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                       TaskSchema, User, UserSchema, db)
@@ -21,6 +22,7 @@ task_schema = TaskSchema()
 file_schema = FileSchema()
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 ALLOWED_EXTENSIONS = {'mp3', 'ogg', 'wav'}
+
 
 
 def checkEmail(email):
@@ -134,6 +136,7 @@ class ViewTask(Resource):
 
             output_file = File.query.get_or_404(task.output_file_id)
             input_file = File.query.get_or_404(task.input_file_id)
+            print(current_app.config['PATH_FILES'])
             os.remove(os.path.join("files", input_file.path.split("/")[1]))
             os.remove(os.path.join("files", output_file.path.split("/")[1]))      
             db.session.delete(task)
@@ -187,9 +190,11 @@ class ViewTasks(Resource):
                 response["mensaje"] = "El formato del archivo debe ser (mp3, ogg, wav)"
             else:
                 token_data = getTokenData(request)
+                print(current_app.config['PATH_FILES'],current_app.root_path)
                 file_name = file.filename
                 extention = file_name.rsplit('.', 1)[1].lower()
-                path = 'files/'+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
+                path_files=current_app.config['PATH_FILES']
+                path = path_files+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
                     '.'+extention
                 output_extention = getExtention(request.form['newFormat'])
                 user_id = token_data['sub']
@@ -204,7 +209,7 @@ class ViewTasks(Resource):
                 db.session.add(new_task)
                 db.session.commit()
 
-                file.save(path)
+                file.save(current_app.root_path+path)
                 retry = 0
                 args = (new_task.id, new_file.id,
                         request.form['newFormat'], user_id, retry)
@@ -219,8 +224,8 @@ class ViewFile(Resource):
     @jwt_required()
     def get(self, name):
         try:
-            user = File.query.filter(File.name == name).first()
-            path = "../"+user.path
+            file = File.query.filter(File.name == name).first()
+            path = current_app.root_path+file.path
             return send_file(path, as_attachment=True)
         except:
 
