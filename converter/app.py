@@ -11,7 +11,7 @@ from flask import Flask
 def create_app(config_name):
         _deployed_env_ = os.environ.get("ENVIRONMENT", default=None)
         app = Flask(__name__)
-        print('_deployed_env_='+_deployed_env_)
+        print('_deployed_env_='+str(_deployed_env_))
         if(_deployed_env_==None):
                 app.config.from_object('api.configuration.GCPConfig')
         elif (_deployed_env_ == 'gcp'):
