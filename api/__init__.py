@@ -8,7 +8,7 @@ def create_app(config_name):
         if (_deployed_env_ == 'gcp'):
                 app.config.from_object('api.configuration.GCPConfig')
         elif (_deployed_env_ == 'dev-jhon'):
-                app.config.from_object('api.configuration.BaseConfig')
+                app.config.from_object('api.configuration.DevJhonConfig')
         else:
                 app.config.from_object('api.configuration.BaseConfig')
      

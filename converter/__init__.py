@@ -1,12 +1,15 @@
+import os
 from flask import Flask
 
 def create_app(config_name):
+        _deployed_env_ = os.environ.get("ENVIRONMENT", default=None)
         app = Flask(__name__)
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///converter.db'
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-        app.config['JWT_SECRET_KEY']='frase-secreta'
-
-        app.config['PROPAGATE_EXCEPTIONS']=True
-
+        print('_deployed_env_='+_deployed_env_)
+        if (_deployed_env_ == 'gcp'):
+                app.config.from_object('converter.configuration.GCPConfig')
+        elif (_deployed_env_ == 'dev-jhon'):
+                app.config.from_object('converter.configuration.DevJhonConfig')
+        else:
+                app.config.from_object('converter.configuration.BaseConfig')
+     
         return app

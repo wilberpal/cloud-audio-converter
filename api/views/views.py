@@ -136,7 +136,7 @@ class ViewTask(Resource):
 
             output_file = File.query.get_or_404(task.output_file_id)
             input_file = File.query.get_or_404(task.input_file_id)
-            print(current_app.config['PATH_FILES'])
+            
             os.remove(os.path.join("files", input_file.path.split("/")[1]))
             os.remove(os.path.join("files", output_file.path.split("/")[1]))      
             db.session.delete(task)
@@ -192,7 +192,7 @@ class ViewTasks(Resource):
                 token_data = getTokenData(request)
                 print(current_app.config['PATH_FILES'],current_app.root_path)
                 file_name = file.filename
-                extention = file_name.rsplit('.', 1)[1].lower()
+                extention = file_name.split('.', 1)[1].lower()
                 path_files=current_app.config['PATH_FILES']
                 path = path_files+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
                     '.'+extention
@@ -209,7 +209,7 @@ class ViewTasks(Resource):
                 db.session.add(new_task)
                 db.session.commit()
 
-                file.save(current_app.root_path+path)
+                file.save(pathRoot()+path)
                 retry = 0
                 args = (new_task.id, new_file.id,
                         request.form['newFormat'], user_id, retry)
@@ -225,7 +225,8 @@ class ViewFile(Resource):
     def get(self, name):
         try:
             file = File.query.filter(File.name == name).first()
-            path = current_app.root_path+file.path
+
+            path = pathRoot()+file.path
             return send_file(path, as_attachment=True)
         except:
 
@@ -236,6 +237,8 @@ class ViewFile(Resource):
 def convert_file(task_id, input_file_id, output_extention, user_id, retry):
     pass
 
+def pathRoot():
+    return current_app.config['PATH_ROOT'] if (current_app.config['PATH_ROOT']!=None )else current_app.root_path
 
 def error():
     return {"mensaje": "Hubo un error no esperado", "error": True}, 500

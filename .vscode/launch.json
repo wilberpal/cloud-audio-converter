@@ -28,7 +28,9 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "converter/app.py",
+                "FLASK_APP": "app.py",
+                "PYTHONPATH":"/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter/converter",
+                "ENVIRONMENT": "dev-jhon",
                 "FLASK_ENV": "development",
                 "FLASK_DEBUG": "0"
             },

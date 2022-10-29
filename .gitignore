@@ -2,3 +2,5 @@
 .venv
 .venv/*
 files/*
+api/files/*
+.vscode/*

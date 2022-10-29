@@ -7,7 +7,7 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
 from views.views import ViewFile, ViewLogIn, ViewSignUp, ViewTask, ViewTasks
-
+from flask import current_app
 
 
 app = create_app('default')
