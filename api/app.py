@@ -1,6 +1,4 @@
 from flask import Flask
-from api import create_app
-
 
 from models.models import db
 from flask_restful import Api
