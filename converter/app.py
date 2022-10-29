@@ -13,7 +13,7 @@ def create_app(config_name):
         app = Flask(__name__)
         print('_deployed_env_='+str(_deployed_env_))
         if(_deployed_env_==None):
-                app.config.from_object('aconverterpi.configuration.GCPConfig')
+                app.config.from_object('converter.configuration.GCPConfig')
         elif (_deployed_env_ == 'gcp'):
                 app.config.from_object('converter.configuration.GCPConfig')
         elif (_deployed_env_ == 'dev-jhon'):
