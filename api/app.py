@@ -13,13 +13,13 @@ def create_app(config_name):
         app = Flask(__name__)
         print('_deployed_env_='+str(_deployed_env_))
         if(_deployed_env_==None):
-                app.config.from_object('apdi.configuration.GCPConfig')
+                app.config.from_object('api.configuration.GCPConfig')
         elif (_deployed_env_ == 'gcp'):
-                app.config.from_object('adpi.configuration.GCPConfig')
+                app.config.from_object('api.configuration.GCPConfig')
         elif (_deployed_env_ == 'dev-jhon'):
-                app.config.from_object('adpi.configuration.DevJhonConfig')
+                app.config.from_object('api.configuration.DevJhonConfig')
         else:
-                app.config.from_object('apdi.configuration.BaseConfig')
+                app.config.from_object('api.configuration.BaseConfig')
      
         return app
 
