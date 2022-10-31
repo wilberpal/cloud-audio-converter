@@ -29,6 +29,8 @@ class ViewConverter(Resource):
             user = User.query.get_or_404(request.json["user_id"])
             task = Task.query.get_or_404(request.json["task_id"])
             file = File.query.get_or_404(request.json["input_file_id"])
+            if(file == None):
+                return {"mensaje": "no existe el archivo", "error": True}
             print('user,task,file')
             output_extention = request.json["output_extention"]
             path_files=current_app.config['PATH_FILES']
@@ -38,19 +40,21 @@ class ViewConverter(Resource):
             input_file_path = file.path
             input_file_format = file.path.split(".")[1]
             input_path= pathRoot()+input_file_path
-            print('input_path:',input_path)
+
+            """ print('input_path:',input_path)
             from_file = AudioSegment.from_file(
                 pathRoot()+input_file_path, input_file_format)
             print('from_file,AudioSegment')
-            from_file.export(pathRoot()+new_path, format=output_extention)
+            from_file.export(pathRoot()+new_path, format=output_extention) """
+
             print('from_file,export') 
-            """ new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
+            new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
                 output_extention), path=new_path, timestamp=datetime.datetime.now(), user_id=user.id)
             db.session.add(new_file)
             db.session.commit()
             print('new_file')
 
-            task.output_file_id = new_file.id
+            """ task.output_file_id = new_file.id
             print('task')
             task.status = ProcessStatus.PROCESSED
             
