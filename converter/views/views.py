@@ -8,7 +8,6 @@ from flask_restful import Resource
 from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                            TaskSchema, User, UserSchema, db)
 from pydub import AudioSegment
-from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
@@ -40,12 +39,12 @@ class ViewConverter(Resource):
             input_file_format = file.path.split(".")[1]
             input_path= pathRoot()+input_file_path
             print('input_path:',input_path)
-            """ from_file = AudioSegment.from_file(
+            from_file = AudioSegment.from_file(
                 pathRoot()+input_file_path, input_file_format)
             print('from_file,AudioSegment')
             from_file.export(pathRoot()+new_path, format=output_extention)
             print('from_file,export') 
-            new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
+            """ new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
                 output_extention), path=new_path, timestamp=datetime.datetime.now(), user_id=user.id)
             db.session.add(new_file)
             db.session.commit()
@@ -58,7 +57,7 @@ class ViewConverter(Resource):
             db.session.commit()
             print('commit')"""
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
-        except NameError:
+        except :
             return {"mensaje": "Hubo un error no esperado", "error": True}
 
 
