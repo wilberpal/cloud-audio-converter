@@ -10,8 +10,8 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "app.py",
-                "PYTHONPATH":"/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter/api",
+                "FLASK_APP": "api/app.py",
+                "PYTHONPATH":"/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter",
                 "ENVIRONMENT": "dev-jhon",
                 "FLASK_DEBUG": "0"
             },

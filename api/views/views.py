@@ -13,7 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from flask import current_app
 
-from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
+from api.models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                       TaskSchema, User, UserSchema, db)
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
