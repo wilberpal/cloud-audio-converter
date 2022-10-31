@@ -1,10 +1,10 @@
 from flask import Flask
 
-from api.models.models import db
+from models.models import db
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from api.views.views import ViewFile, ViewLogIn, ViewSignUp, ViewTask, ViewTasks
+from views.views import ViewFile, ViewLogIn, ViewSignUp, ViewTask, ViewTasks
 import os
 from flask import Flask
 
@@ -13,13 +13,13 @@ def create_app(config_name):
         app = Flask(__name__)
         print('_deployed_env_='+str(_deployed_env_))
         if(_deployed_env_==None):
-                app.config.from_object('api.configuration.GCPConfig')
+                app.config.from_object('configuration.GCPConfig')
         elif (_deployed_env_ == 'gcp'):
-                app.config.from_object('api.configuration.GCPConfig')
+                app.config.from_object('configuration.GCPConfig')
         elif (_deployed_env_ == 'dev-jhon'):
-                app.config.from_object('api.configuration.DevJhonConfig')
+                app.config.from_object('configuration.DevJhonConfig')
         else:
-                app.config.from_object('api.configuration.BaseConfig')
+                app.config.from_object('configuration.BaseConfig')
      
         print(app.config['SQLALCHEMY_DATABASE_URI'])
         return app

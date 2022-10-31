@@ -1,1 +1,1 @@
-from api.views import *
+from views import *
