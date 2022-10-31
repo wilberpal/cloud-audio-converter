@@ -59,7 +59,7 @@ class ViewConverter(Resource):
             print('task')
             task.status = ProcessStatus.PROCESSED
             
-            db.session.commit()
+            #db.session.commit()
             print('commit')
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
         except NameError:
