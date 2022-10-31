@@ -53,6 +53,18 @@ class ViewConverter(Resource):
             return {"mensaje": "Hubo un error no esperado", "error": True}
 
 
+class ViewLogIn(Resource):
+    def post(self):
+        u_username = request.json['username']
+        u_password = request.json['password']
+        user = User.query.filter_by(
+            username=u_username, password=u_password).first()
+        if user:
+            access_token = create_access_token(identity=user.id)
+            return {'mensaje': 'Inicio de sesion exitoso', 'access token': access_token}, 200
+        else:
+            return {'mensaje': 'Nombre de usuario o contraseña incorrecta'}, 200
+            
 def getExtention(format):
     if format == 'mp3':
         return AudioFormat.MP3
