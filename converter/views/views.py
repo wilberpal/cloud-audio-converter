@@ -41,11 +41,12 @@ class ViewConverter(Resource):
             input_file_format = file.path.split(".")[1]
             input_path= pathRoot()+input_file_path
 
-            """ print('input_path:',input_path)
+            print('input_path:',input_path)
+            print(pathRoot()+input_file_path)
             from_file = AudioSegment.from_file(
                 pathRoot()+input_file_path, input_file_format)
             print('from_file,AudioSegment')
-            from_file.export(pathRoot()+new_path, format=output_extention) """
+            from_file.export(pathRoot()+new_path, format=output_extention)
 
             print('from_file,export') 
             new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
@@ -61,7 +62,7 @@ class ViewConverter(Resource):
             db.session.commit()
             print('commit')
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
-        except :
+        except NameError:
             return {"mensaje": "Hubo un error no esperado", "error": True}
 
 
