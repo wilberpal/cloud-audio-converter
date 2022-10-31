@@ -21,6 +21,7 @@ def create_app(config_name):
         else:
                 app.config.from_object('api.configuration.BaseConfig')
      
+        print(app.config['SQLALCHEMY_DATABASE_URI'])
         return app
 
 
