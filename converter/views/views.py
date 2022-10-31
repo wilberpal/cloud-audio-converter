@@ -54,12 +54,12 @@ class ViewConverter(Resource):
             db.session.commit()
             print('new_file')
 
-            """ task.output_file_id = new_file.id
+            task.output_file_id = new_file.id
             print('task')
             task.status = ProcessStatus.PROCESSED
             
             db.session.commit()
-            print('commit')"""
+            print('commit')
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
         except :
             return {"mensaje": "Hubo un error no esperado", "error": True}
