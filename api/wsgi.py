@@ -1,4 +1,3 @@
-from app import app
-
-if __name__ == "__main__":
-    app.run()
+from api import app
+print(__name__)
+ app.run()
