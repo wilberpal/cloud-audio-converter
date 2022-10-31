@@ -51,7 +51,7 @@ class ViewConverter(Resource):
             new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
                 output_extention), path=new_path, timestamp=datetime.datetime.now(), user_id=user.id)
             db.session.add(new_file)
-            #db.session.commit()
+            db.session.commit()
             print('new_file')
 
             task.output_file_id = new_file.id
