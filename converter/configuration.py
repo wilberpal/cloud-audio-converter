@@ -8,6 +8,7 @@ class BaseConfig(object):
     PATH_FILES='/files/'
 
 class GCPConfig(BaseConfig):
+    PATH_FILES='/home/'
     SQLALCHEMY_DATABASE_URI= 'postgresql://postgres:0123456789@35.238.2.63:5432/postgres'
 
 class DevJhonConfig(BaseConfig):
