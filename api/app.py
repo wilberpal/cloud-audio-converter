@@ -26,17 +26,24 @@ def create_app(config_name):
 
 
 app = create_app('default')
+print('create app')
 app_context = app.app_context()
+print('app_context')
 app_context.push()
+print('push')
 
 db.init_app(app)
+print('init_app')
 db.create_all()
+print('db.create_all()')
 
 api = Api(app)
+print('Api')
 api.add_resource(ViewSignUp, '/api/auth/signup')
 api.add_resource(ViewLogIn, '/api/auth/login')
 api.add_resource(ViewTasks, '/api/tasks')
 api.add_resource(ViewTask, '/api/tasks/<int:id>')
 api.add_resource(ViewFile, '/api/files/<name>')
+print('add_resource')
 
 jwt = JWTManager(app)
