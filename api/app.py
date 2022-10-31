@@ -1,10 +1,10 @@
 from flask import Flask
 
-from models.models import db
+from api.models.models import db
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from views.views import ViewFile, ViewLogIn, ViewSignUp, ViewTask, ViewTasks
+from api.views.views import ViewFile, ViewLogIn, ViewSignUp, ViewTask, ViewTasks
 import os
 from flask import Flask
 
