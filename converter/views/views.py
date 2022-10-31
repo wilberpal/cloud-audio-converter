@@ -23,31 +23,40 @@ class ViewConverter(Resource):
 
     def post(self):
         try:
+            print('try')
             if not allowedFile('q.'+request.json["output_extention"]):
                 return {"mensaje": "El formato de salida no es valido (mp3, ogg, wav)", "error": True}
-
+            print('allowedFile')
             user = User.query.get_or_404(request.json["user_id"])
             task = Task.query.get_or_404(request.json["task_id"])
             file = File.query.get_or_404(request.json["input_file_id"])
+            print('user,task,file')
             output_extention = request.json["output_extention"]
             path_files=current_app.config['PATH_FILES']
+            print('path_files:',path_files)
             new_path = path_files+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
                 '.'+output_extention
             input_file_path = file.path
             input_file_format = file.path.split(".")[1]
             input_path= pathRoot()+input_file_path
+            print('input_path:',input_path)
             from_file = AudioSegment.from_file(
                 pathRoot()+input_file_path, input_file_format)
+            print('from_file,AudioSegment')
             from_file.export(pathRoot()+new_path, format=output_extention)
-
+            print('from_file,export')
             new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
                 output_extention), path=new_path, timestamp=datetime.datetime.now(), user_id=user.id)
             db.session.add(new_file)
             db.session.commit()
+            print('new_file')
 
             task.output_file_id = new_file.id
+            print('task')
             task.status = ProcessStatus.PROCESSED
+            
             db.session.commit()
+            print('commit')
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
         except NameError:
             return {"mensaje": "Hubo un error no esperado", "error": True}
@@ -64,7 +73,7 @@ class ViewLogIn(Resource):
             return {'mensaje': 'Inicio de sesion exitoso', 'access token': access_token}, 200
         else:
             return {'mensaje': 'Nombre de usuario o contraseña incorrecta'}, 200
-            
+
 def getExtention(format):
     if format == 'mp3':
         return AudioFormat.MP3
