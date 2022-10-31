@@ -3,7 +3,7 @@ from flask import Flask
 
 from models.models import db
 from flask_restful import Api
-from views.views import ViewConverter
+from views.views import ViewConverter,ViewLogIn
 from flask_jwt_extended import JWTManager
 import os
 from flask import Flask
@@ -23,6 +23,7 @@ def create_app(config_name):
      
         return app
 app = create_app('default')
+
 app_context = app.app_context()
 app_context.push()
 
@@ -31,5 +32,6 @@ db.init_app(app)
 
 api = Api(app)
 api.add_resource(ViewConverter, '/api/audio/converter')
+api.add_resource(ViewLogIn, '/api/auth/login')
 
 jwt = JWTManager(app)
