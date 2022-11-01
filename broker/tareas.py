@@ -12,7 +12,7 @@ def convert_file(task_id,input_file_id, output_extention, user_id,retry):
     try:
         print('Test Boker')
         payload = dict(task_id=task_id, input_file_id=input_file_id,output_extention=output_extention,user_id=user_id)
-        content = requests.post('http://127.0.0.1:5001/api/audio/converter', json=payload)
+        content = requests.post('http://34.28.45.254/api/audio/converter', json=payload)
         print(content.json())
         print(payload)
         if content.status_code == 200:
