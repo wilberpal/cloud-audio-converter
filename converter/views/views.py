@@ -62,7 +62,7 @@ class ViewConverter(Resource):
             db.session.commit()
             print('commit')
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
-        except NameError:
+        except Exception as e:
             return {"mensaje": "Hubo un error no esperado", "error": True}
 
 
