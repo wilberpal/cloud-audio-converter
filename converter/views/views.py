@@ -9,6 +9,11 @@ from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                            TaskSchema, User, UserSchema, db)
 from pydub import AudioSegment
 from werkzeug.utils import secure_filename
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import ssl
+import os
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
 user_schema = UserSchema()
@@ -22,48 +27,49 @@ class ViewConverter(Resource):
 
     def post(self):
         try:
-            print('try')
+        
             if not allowedFile('q.'+request.json["output_extention"]):
                 return {"mensaje": "El formato de salida no es valido (mp3, ogg, wav)", "error": True}
-            print('allowedFile')
+
             user = User.query.get_or_404(request.json["user_id"])
             task = Task.query.get_or_404(request.json["task_id"])
             file = File.query.get_or_404(request.json["input_file_id"])
+            
             if(file == None):
                 return {"mensaje": "no existe el archivo", "error": True}
-            print('user,task,file')
+      
             output_extention = request.json["output_extention"]
             path_files=current_app.config['PATH_FILES']
-            print('path_files:',path_files)
+            mensaje="Se ha convertido el archivo "+file.name+" al formato "+output_extention+" con exito"
+            sendEmail(mensaje,user.email)
+    
             new_path = path_files+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
                 '.'+output_extention
             input_file_path = file.path
             input_file_format = file.path.split(".")[1]
             input_path= pathRoot()+input_file_path
 
-            print('input_path:',input_path)
-            print(pathRoot()+input_file_path)
             from_file = AudioSegment.from_file(
                 pathRoot()+input_file_path, input_file_format)
-            print('from_file,AudioSegment')
+   
             from_file.export(pathRoot()+new_path, format=output_extention)
 
-            print('from_file,export') 
             new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
                 output_extention), path=new_path, timestamp=datetime.datetime.now(), user_id=user.id)
             db.session.add(new_file)
             db.session.commit()
-            print('new_file')
-
+     
             task.output_file_id = new_file.id
-            print('task')
+  
             task.status = ProcessStatus.PROCESSED
             
             db.session.commit()
-            print('commit')
-            return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
+            
+            sendEmail(mensaje,user.email)
+          
+            return {"mensaje": mensaje, "error": False}
         except Exception as e:
-            return {"mensaje": "Hubo un error no esperado"+str(e), "error": True}
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
 
 class ViewLogIn(Resource):
@@ -107,3 +113,25 @@ def getPagination(request):
 
 def pathRoot():
     return current_app.config['PATH_ROOT'] if (current_app.config['PATH_ROOT'] != None)else current_app.root_path
+
+def sendEmail(mensaje,email):
+    _send_email = os.environ.get("SEND_EMAIL", default=None)
+    if(_send_email=="True"):
+        context = ssl.create_default_context()
+        
+        msg = MIMEMultipart()
+
+        msg['From'] = "emailpruebasuniandes@gmail.com"
+        msg['To'] = email
+        msg['Subject'] = "Notificación Conversión Audio"
+        print(mensaje)
+        msg.attach(MIMEText(mensaje, 'plain'))
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+
+            server.login('emailpruebasuniandes@gmail.com', 'muylmymsziopqmlc')
+            print('INICIÒ SESIÒN GMAIL')
+            destinatario = 'emailpruebasuniandes@gmail.com'
+            server.sendmail('emailpruebasuniandes@gmail.com', destinatario, msg.as_string())
+            server.quit()
+            print('MENSAJE ENVIADO')

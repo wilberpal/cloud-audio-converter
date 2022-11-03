@@ -30,8 +30,9 @@
             "env": {
                 "FLASK_APP": "app.py",
                 "PYTHONPATH":"/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter/converter",
-                "ENVIRONMENT": "gcp",
+                "ENVIRONMENT": "dev-jhon",
                 "FLASK_ENV": "development",
+                "SEND_EMAIL":"True",
                 "FLASK_DEBUG": "0"
             },
             "args": [
