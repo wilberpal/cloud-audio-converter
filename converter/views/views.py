@@ -63,7 +63,7 @@ class ViewConverter(Resource):
             print('commit')
             return {"mensaje": "Se ha convertido el archivo con exito", "error": False}
         except Exception as e:
-            return {"mensaje": "Hubo un error no esperado", "error": True}
+            return {"mensaje": "Hubo un error no esperado"+str(e), "error": True}
 
 
 class ViewLogIn(Resource):
