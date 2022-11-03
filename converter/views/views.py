@@ -131,7 +131,7 @@ def sendEmail(mensaje,email):
 
             server.login('emailpruebasuniandes@gmail.com', 'muylmymsziopqmlc')
             print('INICIÒ SESIÒN GMAIL')
-            destinatario = 'emailpruebasuniandes@gmail.com'
+            destinatario = email
             server.sendmail('emailpruebasuniandes@gmail.com', destinatario, msg.as_string())
             server.quit()
             print('MENSAJE ENVIADO')
