@@ -96,8 +96,8 @@ class ViewTask(Resource):
             t = task_schema.dump(Task.query.get_or_404(id))
             t["usuario"] = task.usuario.username
             return t
-        except:
-            return error()
+        except Exception as e:
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
     @jwt_required()
     def put(self, id):
@@ -132,9 +132,8 @@ class ViewTask(Resource):
             t = task_schema.dump(Task.query.get_or_404(id))
             t["usuario"] = task.usuario.username   
             return t
-        except NameError:
-            error=NameError
-            return error()
+        except Exception as e:
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
     @jwt_required()
     def delete(self, id):
@@ -160,9 +159,8 @@ class ViewTask(Resource):
             db.session.delete(input_file)
             db.session.commit()
             return {'mensaje': 'Tarea eliminada con exito'}, 200
-        except NameError:
-            error=NameError
-            return error()
+        except Exception as e:
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
 
 class ViewTasks(Resource):
@@ -183,8 +181,8 @@ class ViewTasks(Resource):
                 task.user = task.usuario.username
                 task.input_extention = task.input_extention.value
             return [task_schema.dump(task) for task in tasks.items]
-        except:
-            return error()
+        except Exception as e:
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
     @jwt_required()
     def post(self):
@@ -242,8 +240,8 @@ class ViewTasks(Resource):
                 convert_file.apply_async(args)
 
             return response
-        except:
-            return error()
+        except Exception as e:
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
 
 class ViewFile(Resource):
@@ -266,9 +264,8 @@ class ViewFile(Resource):
             os.remove(input_path)
 
             return response
-        except:
-
-            return error()
+        except Exception as e:
+            return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 
 
 @celery_app.task(name='convert_file')
