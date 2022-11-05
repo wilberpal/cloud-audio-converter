@@ -15,12 +15,9 @@ from email.mime.multipart import MIMEMultipart
 import ssl
 import os
 from google.cloud import storage
-os.environ['GOOGLE_APPLICATION_CREDENTIALS']='gcpCredentials.json'
 
 
 
-storage_client=storage.Client()
-bucket= storage_client.get_bucket('file-bucket-server')
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
 user_schema = UserSchema()
@@ -28,7 +25,6 @@ task_schema = TaskSchema()
 file_schema = FileSchema()
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 ALLOWED_EXTENSIONS = {'mp3', 'ogg', 'wav'}
-
 
 class ViewConverter(Resource):
 
@@ -58,6 +54,8 @@ class ViewConverter(Resource):
 
             if(file == None):
                 return {"mensaje": "no existe el archivo", "error": True}   
+            #Iniciar GCP        
+            bucket= getBucket()
 
             # Obtener blob input_file desde GCP (temporal)
             blob_input=bucket.blob(file.path)
@@ -159,3 +157,8 @@ def sendEmail(mensaje,email):
             server.sendmail('emailpruebasuniandes@gmail.com', destinatario, msg.as_string())
             server.quit()
             print('MENSAJE ENVIADO')
+def getBucket():
+    path_gcp_credentials=current_app.config['PATH_GCP_CREDENTIALS']
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS']=path_gcp_credentials+'gcpCredentials.json'
+    storage_client=storage.Client()
+    return storage_client.get_bucket('file-bucket-server')

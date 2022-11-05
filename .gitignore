@@ -2,6 +2,5 @@
 .venv
 .venv/*
 files/*
-api/files/*
 .vscode/*
 gcoCredentials.json

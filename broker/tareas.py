@@ -14,7 +14,8 @@ def convert_file(task_id,input_file_id, output_extention, user_id,retry):
         payload = dict(task_id=task_id, input_file_id=input_file_id,output_extention=output_extention,user_id=user_id)
         url_converter=os.environ.get("URL_CONVERTER", default=None)
         print(url_converter)
-        content = requests.post('http://localhost:5001/api/audio/converter', json=payload)
+        content = requests.post(url_converter+'/api/audio/converter', json=payload)
+        #content = requests.post('http://localhost:5001/api/audio/converter', json=payload)
         print(content.json())
         print(payload)
         if content.status_code == 200:

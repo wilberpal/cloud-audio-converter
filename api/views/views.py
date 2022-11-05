@@ -15,10 +15,7 @@ from flask import current_app
 
 from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                       TaskSchema, User, UserSchema, db)
-
 from google.cloud import storage
-os.environ['GOOGLE_APPLICATION_CREDENTIALS']='gcpCredentials.json'
-
 
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
@@ -27,8 +24,6 @@ task_schema = TaskSchema()
 file_schema = FileSchema()
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 ALLOWED_EXTENSIONS = {'mp3', 'ogg', 'wav'}
-storage_client=storage.Client()
-bucket= storage_client.get_bucket('file-bucket-server')
 
 
 def checkEmail(email):
@@ -115,6 +110,7 @@ class ViewTask(Resource):
                 output_file = File.query.get_or_404(task.output_file_id)
                 task.output_file_id= None
                 # Eliminar blob de GCP
+                bucket=getBucket()
                 blob_input=bucket.blob(output_file.path)
                 blob_input.delete()
                 #Elimina registro de archivo convertido de base de datos
@@ -147,6 +143,7 @@ class ViewTask(Resource):
             input_file = File.query.get_or_404(task.input_file_id)
             
             # Eliminar blobs de GCP
+            bucket=getBucket()
             blob_input=bucket.blob(input_file.path)
             blob_input.delete()
             blob_output=bucket.blob(output_file.path)
@@ -202,6 +199,7 @@ class ViewTasks(Resource):
                 response["error"] = True
                 response["mensaje"] = "El formato del archivo debe ser (mp3, ogg, wav)"
             else:
+                bucket=getBucket()
                 token_data = getTokenData(request)        
                 file_name = file.filename
                 extention = file_name.split('.', 1)[1].lower()
@@ -253,6 +251,7 @@ class ViewFile(Resource):
             input_path= pathRoot()+file.path
 
             # Obtener blob input_file desde GCP (temporal)
+            bucket=getBucket()
             blob_input=bucket.blob(file.path)
             blob_input.download_to_filename(input_path)
             path = pathRoot()+file.path
@@ -304,3 +303,9 @@ def getPagination(request):
     page = 1 if (request.args.get('page') == None) else int(
         request.args.get('page'))
     return {'page': page, 'per_page': per_page}
+
+def getBucket():
+    path_gcp_credentials=current_app.config['PATH_GCP_CREDENTIALS']
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS']=path_gcp_credentials+'gcpCredentials.json'
+    storage_client=storage.Client()
+    return storage_client.get_bucket('file-bucket-server')

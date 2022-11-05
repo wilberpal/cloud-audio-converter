@@ -6,13 +6,16 @@ class BaseConfig(object):
     PROPAGATE_EXCEPTIONS=True
     PATH_ROOT=None
     PATH_FILES='/files/'
+    PATH_GCP_CREDENTIALS=''
 
 class GCPConfig(BaseConfig):
-    PATH_FILES='/home/'
-    SQLALCHEMY_DATABASE_URI= 'postgresql://postgres:0123456789@35.238.2.63:5432/postgres'
+    PATH_FILES='/files/'
+    SQLALCHEMY_DATABASE_URI= 'postgresql://postgres:0123456789@35.194.21.210:5432/postgres'
     PATH_ROOT="/home/j_albarracinp/cloud-audio-converter/converter"
+    PATH_GCP_CREDENTIALS='/home/j_albarracinp/cloud-audio-converter/'
 
 class DevJhonConfig(BaseConfig):
     PATH_FILES='/files/'
-    SQLALCHEMY_DATABASE_URI= 'postgresql://postgres:0123456789@35.238.2.63:5432/postgres'
+    SQLALCHEMY_DATABASE_URI= 'postgresql://postgres:0123456789@35.194.21.210:5432/postgres'
     PATH_ROOT="/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter/api"
+    PATH_GCP_CREDENTIALS='/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter/'
