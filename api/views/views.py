@@ -16,13 +16,19 @@ from flask import current_app
 from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                       TaskSchema, User, UserSchema, db)
 
+from google.cloud import storage
+os.environ['GOOGLE_APPLICATION_CREDENTIALS']='gcpCredentials.json'
+
+
+
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
 user_schema = UserSchema()
 task_schema = TaskSchema()
 file_schema = FileSchema()
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 ALLOWED_EXTENSIONS = {'mp3', 'ogg', 'wav'}
-
+storage_client=storage.Client()
+bucket= storage_client.get_bucket('file-bucket-server')
 
 
 def checkEmail(email):
@@ -104,10 +110,14 @@ class ViewTask(Resource):
             task.output_extention = getExtention(request.json['newFormat'])
             task.status=ProcessStatus.UPLOADED
 
-            if(task.output_file_id != None):                
+            if(task.output_file_id != None): 
+                #Obtiene archivo convertido de la base de datos               
                 output_file = File.query.get_or_404(task.output_file_id)
                 task.output_file_id= None
-                os.remove(os.path.join("files", output_file.path.split("/")[1])) 
+                # Eliminar blob de GCP
+                blob_input=bucket.blob(output_file.path)
+                blob_input.delete()
+                #Elimina registro de archivo convertido de base de datos
                 db.session.delete(output_file)
                 db.session.commit()
 
@@ -137,8 +147,13 @@ class ViewTask(Resource):
             output_file = File.query.get_or_404(task.output_file_id)
             input_file = File.query.get_or_404(task.input_file_id)
             
-            os.remove(os.path.join("files", input_file.path.split("/")[1]))
-            os.remove(os.path.join("files", output_file.path.split("/")[1]))      
+            # Eliminar blobs de GCP
+            blob_input=bucket.blob(input_file.path)
+            blob_input.delete()
+            blob_output=bucket.blob(output_file.path)
+            blob_output.delete()
+
+            # Eliminar registros de base de datos
             db.session.delete(task)
             db.session.commit()
             db.session.delete(output_file)
@@ -189,8 +204,7 @@ class ViewTasks(Resource):
                 response["error"] = True
                 response["mensaje"] = "El formato del archivo debe ser (mp3, ogg, wav)"
             else:
-                token_data = getTokenData(request)
-                print(current_app.config['PATH_FILES'],current_app.root_path)
+                token_data = getTokenData(request)        
                 file_name = file.filename
                 extention = file_name.split('.', 1)[1].lower()
                 path_files=current_app.config['PATH_FILES']
@@ -198,18 +212,30 @@ class ViewTasks(Resource):
                     '.'+extention
                 output_extention = getExtention(request.form['newFormat'])
                 user_id = token_data['sub']
+                blob_path=pathRoot()+path
 
+                # Crear archivo en base de datos
                 new_file = File(name=file_name, extention=getExtention(
                     extention), path=path, timestamp=datetime.datetime.now(), user_id=user_id)
                 db.session.add(new_file)
                 db.session.commit()
 
+                # Crear tarea en base de datos
                 new_task = Task(status=ProcessStatus.UPLOADED, input_extention=getExtention(
                     extention), output_extention=output_extention, user_id=user_id, input_file_id=new_file.id)
                 db.session.add(new_task)
                 db.session.commit()
 
-                file.save(pathRoot()+path)
+                # Guardar archivo en carpeta termporal
+                file.save(blob_path)
+
+                # Guardar archivo en bucket GCP
+                blob_to_upload = bucket.blob(path)
+                blob_to_upload.upload_from_filename(blob_path)
+
+                # Eliminar archivo temporal
+                os.remove(blob_path)
+
                 retry = 0
                 args = (new_task.id, new_file.id,
                         request.form['newFormat'], user_id, retry)
@@ -224,10 +250,22 @@ class ViewFile(Resource):
     @jwt_required()
     def get(self, name):
         try:
+            # obtener registro de base de datos
             file = File.query.filter(File.name == name).first()
+            input_path= pathRoot()+file.path
 
+            # Obtener blob input_file desde GCP (temporal)
+            blob_input=bucket.blob(file.path)
+            blob_input.download_to_filename(input_path)
             path = pathRoot()+file.path
-            return send_file(path, as_attachment=True)
+
+            # Construir respuesta
+            response=send_file(path, as_attachment=True)
+
+            # Eliminar archivos temporales         
+            os.remove(input_path)
+
+            return response
         except:
 
             return error()

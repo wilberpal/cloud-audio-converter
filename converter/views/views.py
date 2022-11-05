@@ -14,6 +14,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import ssl
 import os
+from google.cloud import storage
+os.environ['GOOGLE_APPLICATION_CREDENTIALS']='gcpCredentials.json'
+
+
+
+storage_client=storage.Client()
+bucket= storage_client.get_bucket('file-bucket-server')
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
 user_schema = UserSchema()
@@ -34,40 +41,57 @@ class ViewConverter(Resource):
             user = User.query.get_or_404(request.json["user_id"])
             task = Task.query.get_or_404(request.json["task_id"])
             file = File.query.get_or_404(request.json["input_file_id"])
-            
-            if(file == None):
-                return {"mensaje": "no existe el archivo", "error": True}
-      
             output_extention = request.json["output_extention"]
             path_files=current_app.config['PATH_FILES']
-            mensaje="Se ha convertido el archivo "+file.name+" al formato "+output_extention+" con exito"
-            sendEmail(mensaje,user.email)
-    
-            new_path = path_files+datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
-                '.'+output_extention
-            input_file_path = file.path
-            input_file_format = file.path.split(".")[1]
-            input_path= pathRoot()+input_file_path
-
-            from_file = AudioSegment.from_file(
-                pathRoot()+input_file_path, input_file_format)
+            mensaje_salida="Se ha convertido el archivo "+file.name+" al formato "+output_extention+" con exito"            
    
-            from_file.export(pathRoot()+new_path, format=output_extention)
+            input_file_format = file.path.split(".")[1]
+            input_path= pathRoot()+file.path
+            
 
-            new_file = File(name=file.name.split(".")[0]+"."+output_extention, extention=getExtention(
+            new_file_db_name=file.name.split(".")[0]+"."+output_extention
+            new_file_storage_name=datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S_%f") + \
+                '.'+output_extention
+            new_path = path_files+new_file_storage_name 
+            blob_output_path=pathRoot()+new_path          
+            
+
+            if(file == None):
+                return {"mensaje": "no existe el archivo", "error": True}   
+
+            # Obtener blob input_file desde GCP (temporal)
+            blob_input=bucket.blob(file.path)
+            blob_input.download_to_filename(input_path)
+
+            # Convertir archivo
+            from_file = AudioSegment.from_file(input_path, input_file_format)
+            
+            # Guardar archivo convertido  (temporal)
+            from_file.export(blob_output_path, format=output_extention)
+
+            # Guardar archivo convertido en bucket GCP
+            blob_to_upload = bucket.blob(new_path)
+            blob_to_upload.upload_from_filename(blob_output_path)
+
+            # Eliminar archivos temporales
+            os.remove(blob_output_path)
+            os.remove(input_path)
+
+            # Crear registro de archivo en base de datos
+            new_file = File(name=new_file_db_name, extention=getExtention(
                 output_extention), path=new_path, timestamp=datetime.datetime.now(), user_id=user.id)
             db.session.add(new_file)
             db.session.commit()
-     
-            task.output_file_id = new_file.id
-  
-            task.status = ProcessStatus.PROCESSED
-            
+
+            # Actualizar tarea en base de datos     
+            task.output_file_id = new_file.id  
+            task.status = ProcessStatus.PROCESSED            
             db.session.commit()
             
-            sendEmail(mensaje,user.email)
+            # Enviar correo al usuario informando que ya se convirtio el archivo
+            sendEmail(mensaje_salida,user.email)
           
-            return {"mensaje": mensaje, "error": False}
+            return {"mensaje": mensaje_salida, "error": False}
         except Exception as e:
             return {"mensaje": "Hubo un error no esperado. "+str(e), "error": True}
 

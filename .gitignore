@@ -4,3 +4,4 @@
 files/*
 api/files/*
 .vscode/*
+gcoCredentials.json
