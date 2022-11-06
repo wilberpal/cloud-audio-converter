@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    server_name __PUBLIC_IP_HOST__;
+
+    location / {
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 75s;
+        include proxy_params;
+        proxy_pass http://unix:/home/j_albarracinp/cloud-audio-converter/__PROXY_PASS__/cloud-audio-converter.sock;
+    }
+}
