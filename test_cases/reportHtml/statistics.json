@@ -1,0 +1,34 @@
+{
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 1044,
+    "errorCount" : 1044,
+    "errorPct" : 100.0,
+    "meanResTime" : 1.391762452107279,
+    "medianResTime" : 1.0,
+    "minResTime" : 1.0,
+    "maxResTime" : 28.0,
+    "pct1ResTime" : 2.0,
+    "pct2ResTime" : 2.0,
+    "pct3ResTime" : 4.0,
+    "throughput" : 1.3827796254574498,
+    "receivedKBytesPerSec" : 1.8581101217084481,
+    "sentKBytesPerSec" : 0.0
+  },
+  "Crear Tarea" : {
+    "transaction" : "Crear Tarea",
+    "sampleCount" : 1044,
+    "errorCount" : 1044,
+    "errorPct" : 100.0,
+    "meanResTime" : 1.391762452107279,
+    "medianResTime" : 1.0,
+    "minResTime" : 1.0,
+    "maxResTime" : 28.0,
+    "pct1ResTime" : 2.0,
+    "pct2ResTime" : 2.0,
+    "pct3ResTime" : 4.0,
+    "throughput" : 1.3827796254574498,
+    "receivedKBytesPerSec" : 1.8581101217084481,
+    "sentKBytesPerSec" : 0.0
+  }
+}
