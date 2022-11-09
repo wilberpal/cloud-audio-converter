@@ -41,9 +41,9 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">back-vinilos-miso.herokuapp.com</stringProp>
+          <stringProp name="HTTPSampler.domain">10.128.0.27</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path"></stringProp>
           <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
@@ -69,7 +69,7 @@
         </ConstantTimer>
         <hashTree/>
         <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
-          <stringProp name="DurationAssertion.duration">2500</stringProp>
+          <stringProp name="DurationAssertion.duration">1500</stringProp>
         </DurationAssertion>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Obtener Tareas" enabled="true">
@@ -95,7 +95,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/albums/</stringProp>
+          <stringProp name="HTTPSampler.path">/api/tasks</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -115,14 +115,14 @@
               </elementProp>
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2NzI3NDc0NCwianRpIjoiNjVlMzU2OTUtZjg1Ni00ZjQzLWI4NjctNTU5N2I0OTZmZjZkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3Mjc0NzQ0LCJleHAiOjE2NjcyNzU2NDR9.61O98apmK0zUn0eQR9myn7NI4v0E8UmRx0RolKxDEBk</stringProp>
+                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Nzk2MTQ3MCwianRpIjoiZDg2OGFlNjMtN2FiMC00NDlkLWFmYzQtMjhkZjkwZGEyM2NkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3OTYxNDcwLCJleHAiOjE2Njc5NjIzNzB9.zk7pEoMSU6C71cMzIGKySZiWy50iDyRSFT0lkmIYbA4</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="1116933">&quot;id&quot;</stringProp>
+              <stringProp name="144297312">&quot;output_extention&quot;</stringProp>
             </collectionProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
