@@ -74,8 +74,8 @@
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Crear Tarea" enabled="true">
           <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
             <collectionProp name="HTTPFileArgs.files">
-              <elementProp name="/cloud-audio-converter/test_files/audio1.mp3" elementType="HTTPFileArg">
-                <stringProp name="File.path">/cloud-audio-converter/test_files/audio1.mp3</stringProp>
+              <elementProp name="../test_files/audio1.mp3" elementType="HTTPFileArg">
+                <stringProp name="File.path">../test_files/audio1.mp3</stringProp>
                 <stringProp name="File.paramname">file</stringProp>
                 <stringProp name="File.mimetype">audio/mp3</stringProp>
               </elementProp>
@@ -116,7 +116,7 @@
               </elementProp>
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Nzk2NDc5MywianRpIjoiZDI2MjEwMmQtNWY1Ny00MjVkLTlmZDQtY2U2YTQ4ZTZjZDBiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3OTY0NzkzLCJleHAiOjE2Njc5NjU2OTN9.0kDN-2Dzu91jKwYxyRx4YWsTPyozkk6dZzsBY4MWLuE</stringProp>
+                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Nzk2NTY1NSwianRpIjoiNDcyZWE0OWItOWRhZS00MThhLWFhMzItZGIxZWI5MzI4MzRhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3OTY1NjU1LCJleHAiOjE2Njc5NjY1NTV9.097jmhcDvBa1jtnPodAIG9zzk6esQNuOvbFA2AGhiyM</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
