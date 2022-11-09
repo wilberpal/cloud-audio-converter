@@ -68,7 +68,7 @@
         </ConstantTimer>
         <hashTree/>
         <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
-          <stringProp name="DurationAssertion.duration">5000</stringProp>
+          <stringProp name="DurationAssertion.duration">8000</stringProp>
         </DurationAssertion>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Crear Tarea" enabled="true">
@@ -116,7 +116,7 @@
               </elementProp>
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer eeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Nzk2NjI4NSwianRpIjoiMzhjODQzOWUtNWM4NC00ODc0LTkzNDMtZTBmYTA3ZjNkMGUxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3OTY2Mjg1LCJleHAiOjE2Njc5NjcxODV9.GUj7Eay1Py5Ifm2a4aAm_zysW7ncfYvvTKWNw5I38Vk</stringProp>
+                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Nzk2ODg3NiwianRpIjoiYzk3OGU2NGUtNzlkYS00ZjFjLTkyOGYtMDljN2VmYmFlN2EzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3OTY4ODc2LCJleHAiOjE2Njc5Njk3NzZ9.gO1p0HYgpqVWdlCWP6PeA0TZkkvGfcgR4RDHWvpMaHE</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -162,7 +162,7 @@
                 <idleTime>true</idleTime>
               </value>
             </objProp>
-            <stringProp name="filename">${filesDirectory}/test2.csv</stringProp>
+            <stringProp name="filename">${filesDirectory}\test2.csv</stringProp>
           </ResultCollector>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Ver Árbol de Resultados" enabled="true">
@@ -196,7 +196,7 @@
                 <idleTime>true</idleTime>
               </value>
             </objProp>
-            <stringProp name="filename">${filesDirectory}/test_results2.csv</stringProp>
+            <stringProp name="filename">${filesDirectory}\test_results2.csv</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
