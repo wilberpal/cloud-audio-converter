@@ -41,7 +41,7 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">34.120.243.148</stringProp>
+          <stringProp name="HTTPSampler.domain">34.171.146.113</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -115,7 +115,7 @@
               </elementProp>
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODM5ODk2MSwianRpIjoiNjc1MWM2NjQtOTVhYy00Nzg4LTk3MjgtYjgzMGMyZmJmMDAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY4Mzk4OTYxLCJleHAiOjE2NjgzOTk4NjF9.OLo2tG4w4IsHeLf87vSzTEvthiKaxd_A781iFHKWV0E</stringProp>
+                <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2Nzk2Mjg2MSwianRpIjoiYzVlMWI5YTktMjYyYi00MTNhLWIxMmYtMGQ2Yjc5ZDQ3MWYyIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNjY3OTYyODYxLCJleHAiOjE2Njc5NjM3NjF9.opZ4on7vEmQedhLDhDl5ObU4WW6sAz5K4VntRES2LkmememememetringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
