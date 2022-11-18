@@ -11,7 +11,8 @@ sudo systemctl  unmask  myproject
 sudo systemctl stop myproject
 sudo systemctl enable myproject
 sudo systemctl start myproject
-export URL_CONVERTER=http://34.28.4.169
+sudo systemctl start redis
+export URL_CONVERTER=http://34.27.166.50
 cd /home/j_albarracinp/cloud-audio-converter
 source .venv/bin/activate
 celery -A broker.tareas  worker -l info
