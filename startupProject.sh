@@ -15,4 +15,4 @@ sudo systemctl start redis
 export URL_CONVERTER=http://34.27.166.50
 cd /home/j_albarracinp/cloud-audio-converter
 source .venv/bin/activate
-celery -A broker.tareas  worker -l info
+python broker/subscriber.py

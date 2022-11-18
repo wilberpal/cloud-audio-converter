@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name 34.120.243.148;
+    server_name __PUBLIC_IP_HOST__;
     location / {
         proxy_read_timeout 300s;
         proxy_connect_timeout 75s;
