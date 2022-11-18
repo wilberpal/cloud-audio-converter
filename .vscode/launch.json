@@ -13,7 +13,7 @@
                 "FLASK_APP": "app.py",
                 "PYTHONPATH":"/Volumes/DATA/EDU/MISO/Cloud/cloud-audio-converter/api",
                 "ENVIRONMENT": "dev-jhon",
-                "FLASK_DEBUG": "0"
+                "FLASK_DEBUG": "0",
             },
             "args": [
                 "run",
