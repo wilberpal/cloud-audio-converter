@@ -4,3 +4,4 @@
 files/*
 .vscode/*
 gcpCredentials.json
+pubSubKey.json

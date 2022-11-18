@@ -15,7 +15,8 @@ from flask import current_app
 
 from models.models import (AudioFormat, File, FileSchema, ProcessStatus, Task,
                       TaskSchema, User, UserSchema, db)
-from google.cloud import storage
+from google.cloud import storage,pubsub_v1
+import json
 
 
 celery_app = Celery(__name__, broker='redis://localhost:6379/0')
@@ -232,10 +233,18 @@ class ViewTasks(Resource):
                 # Eliminar archivo temporal
                 os.remove(blob_path)
 
-                retry = 0
+                #Enviar mensaje a la cola
+                """ retry = 0
                 args = (new_task.id, new_file.id,
                         request.form['newFormat'], user_id, retry)
-                convert_file.apply_async(args)
+                convert_file.apply_async(args) """
+                args={
+                    'task_id':str(new_task.id),
+                    'input_file_id':str(new_file.id),
+                    'output_extention':str(request.form['newFormat']),
+                    'user_id':str(user_id)
+                }               
+                publishMessage(args)
 
             return response
         except Exception as e:
@@ -309,3 +318,10 @@ def getBucket():
     os.environ['GOOGLE_APPLICATION_CREDENTIALS']=path_gcp_credentials+'gcpCredentials.json'
     storage_client=storage.Client()
     return storage_client.get_bucket('file-bucket-server')
+
+def publishMessage(message):
+    path_gcp_credentials=current_app.config['PATH_GCP_CREDENTIALS']
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS']=path_gcp_credentials+'pubSubKey.json'
+    topic_name='projects/converter-367016/topics/converter'
+    publisher=pubsub_v1.PublisherClient()
+    publisher.publish(topic_name,'new Task'.encode('utf-8'),**message)
