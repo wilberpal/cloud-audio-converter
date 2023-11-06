@@ -87,7 +87,6 @@ class ViewTask(Resource):
             task = Task.query.get_or_404(id)
             task.status = task.status.value
             task.output_extention = task.output_extention.value
-            # task.user=task.usuario.username
             task.input_extention = task.input_extention.value
             t = task_schema.dump(Task.query.get_or_404(id))
             t["usuario"] = task.usuario.username
@@ -124,7 +123,6 @@ class ViewTask(Resource):
             convert_file.apply_async(args)          
             task.status = task.status.value
             task.output_extention = task.output_extention.value
-            # task.user=task.usuario.username
             task.input_extention = task.input_extention.value
             t = task_schema.dump(Task.query.get_or_404(id))
             t["usuario"] = task.usuario.username   
