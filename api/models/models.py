@@ -55,7 +55,6 @@ class Task(db.Model):
     user_id= db.Column(db.Integer, db.ForeignKey(USER_ID_DB_NAME), nullable=False)
 
     usuario = db.relationship('User')
-    #file = db.relationship('File')
 
 
 class UserSchema(SQLAlchemyAutoSchema):
