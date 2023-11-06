@@ -7,3 +7,5 @@ CODE FORMAT {data:data}
 ```
 
 Contexto markdown - https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/
+
+Test de Sonar Cloud.
